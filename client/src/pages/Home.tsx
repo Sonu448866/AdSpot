@@ -75,10 +75,10 @@ export const Home: React.FC = () => {
   ];
 
   const founders = [
-    { name: 'Adithya Maurya', role: 'Co-Founder & Product', initials: 'AM' },
-    { name: 'Sonu Kumar', role: 'Co-Founder & Engineering', initials: 'SK' },
-    { name: 'Abhinav Patel', role: 'Co-Founder & Operations', initials: 'AP' },
-    { name: 'Nishchay Maurya', role: 'Co-Founder & Business Growth', initials: 'NM' },
+    { name: 'Adithya Maurya', role: 'CEO & Co-Founder ', img: 'AM' },
+    { name: 'Sonu Kumar', role: 'Co-Founder & Operations Lead', img: 'SK' },
+    { name: 'Abhinav Patel', role: 'Co-Founder & Tech lead', img: 'AP' },
+    { name: 'Nishchay Maurya', role: 'Co-Founder & Sales Lead', img: 'NM' },
   ];
 
   return (
@@ -86,7 +86,7 @@ export const Home: React.FC = () => {
       {/* ========================================================
           A. HERO SECTION
          ======================================================== */}
-      <section className="relative pt-12 pb-20 lg:pt-20 lg:pb-32 bg-radial-gradient">
+      <section className="relative pt-12 pb-12 lg:pt-12 lg:pb-12 bg-radial-gradient"> 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             {/* Left Content */}
@@ -100,11 +100,17 @@ export const Home: React.FC = () => {
                 <Sparkles className="w-3.5 h-3.5" />
                 The Offline Advertising Marketplace
               </div>
-
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-950 tracking-tight leading-[1.12]">
-                Every Space Has an Audience.{' '}
-                <span className="text-[#FC5701]">Find Yours with Adspot.</span>
-              </h1>
+        
+              {/* Bold Editorial Headline */}
+              <div className="space-y-3 relative">
+                <h1 className="text-4xl sm:text-6xl lg:text-6xl font-black text-slate-950 tracking-tight leading-[0.98] uppercase font-serif">
+                  Every Space <br />
+                  <span className="italic font-small text-4xl text-slate-800">Has An</span> Audience.{' '}
+                  <span className="block mt-2 text-[#FC5701] text-7xl font-sans font-black tracking-tighter not-italic relative inline-block bg-slate-950 text-white px-3 py-1 transform -rotate-1 border-2 border-slate-950 shadow-[4px_4px_0px_0px_rgba(252,87,1,1)]">
+                    Find Yours with Adspot.
+                  </span>
+                </h1>
+              </div>
 
               <p className="text-lg text-slate-600 max-w-2xl leading-relaxed mx-auto lg:mx-0">
                 Discover, compare, and book offline advertising spaces in one place. Find the right
@@ -113,7 +119,7 @@ export const Home: React.FC = () => {
               </p>
 
               {/* Action Buttons */}
-              <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3.5 pt-2">
+              <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3.5 ">
                 <Button
                   variant="primary"
                   size="lg"
@@ -123,7 +129,7 @@ export const Home: React.FC = () => {
                   Explore Ads
                 </Button>
                 <Button
-                  variant="outline"
+                  variant="outline" 
                   size="lg"
                   icon={<MapPin className="w-5 h-5 text-[#FC5701]" />}
                   onClick={() => navigate('/maps')}
@@ -139,64 +145,26 @@ export const Home: React.FC = () => {
                   List Your Space
                 </Button>
               </div>
-
-              {/* Trust Metric Chips */}
-              <div className="pt-6 grid grid-cols-3 gap-4 border-t border-slate-200/80 max-w-lg mx-auto lg:mx-0 text-left">
-                <div>
-                  <p className="text-2xl font-bold text-slate-900">100%</p>
-                  <p className="text-xs text-slate-500">Admin Verified</p>
-                </div>
-                <div>
-                  <p className="text-2xl font-bold text-slate-900">₹0</p>
-                  <p className="text-xs text-slate-500">Hidden Markups</p>
-                </div>
-                <div>
-                  <p className="text-2xl font-bold text-slate-900">Map First</p>
-                  <p className="text-xs text-slate-500">Location Insights</p>
-                </div>
-              </div>
             </motion.div>
 
             {/* Right Hero Mascot & Visual Showcase */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
+            <div
               className="lg:col-span-5 relative flex justify-center"
             >
               <div className="relative w-full max-w-md">
                 {/* Decorative background glow */}
-                <div className="absolute -inset-4 bg-gradient-to-r from-orange-400/20 to-amber-300/20 rounded-3xl blur-2xl -z-10" />
+                <div className="absolute -inset-4  from-orange-400/20 to-amber-300/20 rounded-3xl blur-2xl -z-10" />
 
-                <div className="bg-white rounded-3xl p-6 shadow-xl border border-slate-100 relative overflow-hidden">
-                  {/* Hero Mascot */}
+                    {/* Hero Mascot */}
                   <div className="w-full flex justify-center mb-4">
                     <img
                       src="/assets/Adspot_Mascoot.png"
                       alt="Adspot Mascot"
-                      className="h-64 sm:h-72 object-contain filter drop-shadow-lg transform hover:scale-105 transition duration-300"
+                      className="h-80 sm:h-96 mb-24 object-contain filter drop-shadow-lg"
                     />
-                  </div>
-
-                  <div className="bg-slate-50 rounded-2xl p-4 border border-slate-100 flex items-center justify-between">
-                    <div>
-                      <span className="text-[11px] font-bold text-[#FC5701] uppercase tracking-wider block">
-                        Hyperlocal Outdoor Network
-                      </span>
-                      <p className="text-xs text-slate-700 font-medium mt-0.5">
-                        Over 250+ prime billboards & transit corridors mapped
-                      </p>
-                    </div>
-                    <Link
-                      to="/maps"
-                      className="px-3 py-1.5 bg-[#FC5701] text-white text-xs font-semibold rounded-lg hover:bg-[#E04D00] transition"
-                    >
-                      View Map
-                    </Link>
-                  </div>
                 </div>
               </div>
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>
@@ -320,11 +288,18 @@ export const Home: React.FC = () => {
       </section>
 
       {/* ========================================================
-          C. ABOUT ADSPOT
+          C. ABOUT ADSPOT 
          ======================================================== */}
       <section id="about" className="py-20 bg-[#FAFAFA]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            <div className="lg:col-span-6 flex justify-center">
+                <img
+                  src="/assets/Adspot_Mascoot_exploring.png"
+                  alt="Adspot Exploring"
+                  className="w-80 h-96 mx-auto object-contain filter drop-shadow-lg "
+                />
+            </div>
             <div className="lg:col-span-6 space-y-5">
               <span className="text-xs font-bold text-[#FC5701] uppercase tracking-widest block">
                 Why Adspot Exists
@@ -360,23 +335,7 @@ export const Home: React.FC = () => {
               </div>
             </div>
 
-            <div className="lg:col-span-6 flex justify-center">
-              <div className="relative w-full max-w-md bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xl">
-                <img
-                  src="/assets/Adspot_Mascoot_exploring.png"
-                  alt="Adspot Exploring"
-                  className="w-56 h-56 mx-auto object-contain filter drop-shadow"
-                />
-                <div className="mt-4 p-4 bg-orange-50/60 rounded-2xl border border-orange-100 text-center">
-                  <h4 className="text-sm font-bold text-slate-900">
-                    Smart Outdoor Planning
-                  </h4>
-                  <p className="text-xs text-slate-600 mt-1">
-                    "Connect with the right audience right where they live, commute, and shop."
-                  </p>
-                </div>
-              </div>
-            </div>
+            
           </div>
         </div>
       </section>
@@ -762,7 +721,7 @@ export const Home: React.FC = () => {
                 className="bg-slate-50 p-6 rounded-3xl border border-slate-200/80 text-center shadow-xs hover:border-[#FC5701] transition-colors"
               >
                 <div className="w-20 h-20 mx-auto rounded-full bg-gradient-to-tr from-slate-900 to-slate-700 text-white flex items-center justify-center font-extrabold text-xl mb-4 shadow-md">
-                  {founder.initials}
+                  {founder.img}
                 </div>
                 <h3 className="text-base font-bold text-slate-900">{founder.name}</h3>
                 <p className="text-xs text-[#FC5701] font-semibold mt-1">{founder.role}</p>
@@ -777,3 +736,4 @@ export const Home: React.FC = () => {
     </div>
   );
 };
+  

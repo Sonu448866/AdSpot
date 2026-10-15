@@ -57,7 +57,7 @@ export const Navbar: React.FC = () => {
             <img
               src="/assets/Adspot logo.png"
               alt="Adspot Logo"
-              className="h-10 w-auto object-contain transition-transform hover:scale-105"
+              className="h-10 w-auto object-contain"
             />
           </Link>
 

@@ -6,29 +6,6 @@ Adspot is a modern, responsive, full-stack advertising-technology marketplace co
 
 ---
 
-## 🎨 Branding & Design System
-
-The application theme is built directly from the official **Adspot brand assets**:
-- **Primary Brand Color:** `#FC5701` / `#FD5801` (Vibrant Signature Adspot Orange)
-- **Primary Hover / Accent:** `#E04D00` / `#FFF3EB`
-- **Dark Neutral:** `#111111` (Extracted from official logo typography) & Slate `#0F172A`
-- **Status Accents:**
-  - `Available`: Emerald Green (`#10B981`)
-  - `Booked / Unavailable`: Crimson Red (`#EF4444`)
-  - `Pending Review`: Amber (`#F59E0B`)
-
-### Reused Brand Assets
-- `Adspot logo.png`: Primary navbar and footer logo
-- `Adspot_logo2.png`: High-resolution alternate logo
-- `Adspot_Mascoot.png`: Welcome hero mascot
-- `Adspot_Mascoot_Searching.png`: Marketplace search and empty-state mascot
-- `Adspot_Mascoot_delivering.png`: Verified booking delivery mascot
-- `Adspot_Mascoot_exploring.png`: Location intelligence & planning mascot
-- `Adspot_lister_Mascoot.png`: Space owner onboarding & CTA mascot
-- `Adspot_lister_Mascoo_with_maps.png`: Interactive Maps & geospatial mascot
-
----
-
 ## 🚀 Technology Stack
 
 ### Frontend (`client/`)
@@ -159,18 +136,3 @@ node scripts/bootstrapAdmin.js admin@adspot.com Admin@123456 "Adspot Super Admin
 
 ---
 
-## 🛡️ Business Rules & Integrity Guarantees
-
-1. **Strict Verification Lifecycle:** All new or critically modified listings default to `verificationStatus = 'pending'`. Only admin-approved spaces appear in public search and maps.
-2. **Double-Booking Prevention:** Confirmed bookings immediately lock date ranges in the listing's `bookedRanges` array. Conflicting reservation requests are rejected with HTTP 409.
-3. **Server-Side Payment Verification:** Never trusts client messages; HMAC-SHA256 signatures are validated on the backend.
-4. **Backend-Enforced Heatmap Access:** High-resolution audience mobility heatmaps require an active `PremiumEntitlement` verified by server middleware.
-5. **Turnkey Opt-In Managed Ads:** 15% coordination charge is purely optional and captures the advertiser brief into dedicated operational campaign pipelines.
-
----
-
-## 👥 Founding Team
-- **Adithya Maurya** — Co-Founder & Product
-- **Sonu Kumar** — Co-Founder & Engineering
-- **Abhinav Patel** — Co-Founder & Operations
-- **Nishchay Maurya** — Co-Founder & Business Growth

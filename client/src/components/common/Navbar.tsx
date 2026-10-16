@@ -33,7 +33,6 @@ export const Navbar: React.FC = () => {
     { label: 'Explore Ads', path: '/explore' },
     { label: 'Maps', path: '/maps' },
     { label: 'Saved & Orders', path: '/saved-orders' },
-    { label: 'Profile', path: '/profile' },
   ];
 
   const isActive = (path: string) => {
@@ -42,9 +41,17 @@ export const Navbar: React.FC = () => {
   };
 
   const handleProtectedClick = (e: React.MouseEvent, path: string) => {
-    if (!isAuthenticated && (path === '/saved-orders' || path === '/profile')) {
+    if (!isAuthenticated && path === '/saved-orders') {
       e.preventDefault();
       openAuthModal('login');
+    }
+  };
+
+  const handleListSpaceClick = (e: React.MouseEvent) => {
+    if (!isAuthenticated) {
+      e.preventDefault();
+      navigate('/list-your-space');
+      openAuthModal('login', 'space_owner');
     }
   };
 
@@ -82,7 +89,7 @@ export const Navbar: React.FC = () => {
           {/* Right Action Items */}
           <div className="hidden md:flex items-center gap-3">
             {/* "List Your Space" Button */}
-            <Link to="/list-your-space">
+            <Link to="/list-your-space" onClick={handleListSpaceClick}>
               <Button
                 variant="outline"
                 size="sm"
@@ -161,41 +168,62 @@ export const Navbar: React.FC = () => {
                   )}
                 </div>
 
-                {/* Profile Avatar & Menu */}
+                {/* Profile Avatar & Menu (Shown when logged in) */}
                 <div className="relative">
                   <button
                     onClick={() => {
                       setProfileDropdownOpen(!profileDropdownOpen);
                       setNotifDropdownOpen(false);
                     }}
-                    className="flex items-center gap-2 pl-2 pr-3 py-1.5 bg-slate-50 hover:bg-slate-100 rounded-full border border-slate-200 transition"
+                    className={`flex items-center gap-2 pl-2 pr-3 py-1.5 rounded-full border transition ${
+                      profileDropdownOpen
+                        ? 'bg-orange-50/80 border-[#FC5701] text-[#FC5701]'
+                        : 'bg-slate-50 hover:bg-slate-100 border-slate-200 text-slate-800'
+                    }`}
+                    title="View Profile & Settings"
                   >
-                    <div className="w-7 h-7 rounded-full bg-[#FC5701] text-white flex items-center justify-center font-bold text-xs uppercase">
+                    <div className="w-7 h-7 rounded-full bg-[#FC5701] text-white flex items-center justify-center font-bold text-xs uppercase shadow-xs">
                       {user?.name?.charAt(0) || 'U'}
                     </div>
-                    <span className="text-xs font-semibold text-slate-800 max-w-[100px] truncate">
-                      {user?.name?.split(' ')[0]}
-                    </span>
-                    <ChevronDown className="w-3.5 h-3.5 text-slate-500" />
+                    <div className="flex flex-col text-left">
+                      <span className="text-xs font-semibold text-slate-800 max-w-[95px] truncate leading-tight">
+                        {user?.name?.split(' ')[0] || 'Profile'}
+                      </span>
+                      <span className="text-[9px] font-medium text-slate-500 capitalize leading-tight">
+                        {user?.role?.replace('_', ' ')}
+                      </span>
+                    </div>
+                    <ChevronDown
+                      className={`w-3.5 h-3.5 text-slate-500 transition-transform ${
+                        profileDropdownOpen ? 'rotate-180' : ''
+                      }`}
+                    />
                   </button>
 
                   {profileDropdownOpen && (
-                    <div className="absolute right-0 mt-2 w-56 bg-white rounded-2xl shadow-xl border border-slate-100 py-2 z-50">
-                      <div className="px-4 py-2 border-b border-slate-100">
-                        <p className="text-xs font-semibold text-slate-900 truncate">
+                    <div className="absolute right-0 mt-2 w-60 bg-white rounded-2xl shadow-xl border border-slate-100 py-2 z-50">
+                      <div className="px-4 py-2.5 border-b border-slate-100 bg-slate-50/50">
+                        <p className="text-xs font-bold text-slate-900 truncate">
                           {user?.name}
                         </p>
                         <p className="text-[11px] text-slate-500 truncate">{user?.email}</p>
-                        <span className="inline-block mt-1 px-2 py-0.5 bg-orange-50 text-[#FC5701] text-[10px] font-bold rounded-full capitalize">
-                          {user?.role?.replace('_', ' ')}
-                        </span>
+                        <div className="mt-1 flex items-center gap-1.5">
+                          <span className="px-2 py-0.5 bg-orange-100/70 text-[#FC5701] text-[10px] font-bold rounded-full capitalize">
+                            {user?.role?.replace('_', ' ')}
+                          </span>
+                          {user?.role === 'space_owner' && (
+                            <span className="text-[10px] text-emerald-600 font-medium">
+                              ● Space Owner
+                            </span>
+                          )}
+                        </div>
                       </div>
 
                       <div className="py-1">
                         <Link
                           to="/profile"
                           onClick={() => setProfileDropdownOpen(false)}
-                          className="flex items-center gap-2.5 px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50"
+                          className="flex items-center gap-2.5 px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 transition"
                         >
                           <UserIcon className="w-4 h-4 text-slate-400" />
                           My Profile & Settings
@@ -203,16 +231,26 @@ export const Navbar: React.FC = () => {
                         <Link
                           to="/saved-orders"
                           onClick={() => setProfileDropdownOpen(false)}
-                          className="flex items-center gap-2.5 px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50"
+                          className="flex items-center gap-2.5 px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 transition"
                         >
                           <Heart className="w-4 h-4 text-slate-400" />
                           Saved & Orders
                         </Link>
+                        {user?.role === 'space_owner' && (
+                          <Link
+                            to="/list-your-space"
+                            onClick={() => setProfileDropdownOpen(false)}
+                            className="flex items-center gap-2.5 px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 transition"
+                          >
+                            <PlusCircle className="w-4 h-4 text-slate-400" />
+                            List New Space
+                          </Link>
+                        )}
                         {user?.role === 'admin' && (
                           <Link
                             to="/admin"
                             onClick={() => setProfileDropdownOpen(false)}
-                            className="flex items-center gap-2.5 px-4 py-2 text-xs font-semibold text-[#FC5701] hover:bg-orange-50"
+                            className="flex items-center gap-2.5 px-4 py-2 text-xs font-semibold text-[#FC5701] hover:bg-orange-50 transition"
                           >
                             <LayoutDashboard className="w-4 h-4" />
                             Admin Console
@@ -226,18 +264,41 @@ export const Navbar: React.FC = () => {
                             setProfileDropdownOpen(false);
                             logout();
                           }}
-                          className="flex items-center gap-2.5 w-full text-left px-4 py-2 text-xs font-medium text-red-600 hover:bg-red-50"
+                          className="flex items-center gap-2.5 w-full text-left px-4 py-2 text-xs font-medium text-red-600 hover:bg-red-50 transition"
                         >
                           <LogOut className="w-4 h-4" />
-                          Sign Out
+                          Log Out
                         </button>
                       </div>
                     </div>
                   )}
                 </div>
+
+                {/* Explicit Log Out Button in Desktop Header */}
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => {
+                    setProfileDropdownOpen(false);
+                    setNotifDropdownOpen(false);
+                    logout();
+                  }}
+                  icon={<LogOut className="w-3.5 h-3.5 text-slate-500 group-hover:text-red-600 transition" />}
+                  className="group text-slate-600 hover:text-red-600 hover:bg-red-50/80 border border-slate-200/60 hover:border-red-200 text-xs px-2.5 py-1.5 rounded-xl transition font-medium flex items-center gap-1.5"
+                  title="Log Out"
+                >
+                  <span className="hidden lg:inline">Log Out</span>
+                </Button>
               </div>
             ) : (
-              <Button variant="primary" size="sm" onClick={() => openAuthModal('login')}>
+              /* When not logged in: Unified Sign In / Register button */
+              <Button
+                variant="primary"
+                size="sm"
+                onClick={() => openAuthModal('login')}
+                icon={<UserIcon className="w-4 h-4" />}
+                className="shadow-sm font-semibold"
+              >
                 Sign In / Register
               </Button>
             )}
@@ -249,6 +310,7 @@ export const Navbar: React.FC = () => {
               <button
                 onClick={() => navigate('/profile')}
                 className="w-8 h-8 rounded-full bg-[#FC5701] text-white flex items-center justify-center font-bold text-xs"
+                title="Go to Profile"
               >
                 {user?.name?.charAt(0) || 'U'}
               </button>
@@ -267,6 +329,30 @@ export const Navbar: React.FC = () => {
       {/* Mobile Menu Drawer */}
       {mobileMenuOpen && (
         <div className="md:hidden border-t border-slate-100 bg-white px-4 pt-3 pb-6 space-y-2 shadow-lg animate-fadeIn">
+          {isAuthenticated && (
+            <div className="p-3 mb-2 rounded-2xl bg-slate-50 border border-slate-200/80 flex items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-full bg-[#FC5701] text-white flex items-center justify-center font-bold text-sm uppercase">
+                  {user?.name?.charAt(0) || 'U'}
+                </div>
+                <div>
+                  <p className="text-xs font-bold text-slate-900">{user?.name}</p>
+                  <p className="text-[11px] text-slate-500 truncate max-w-[160px]">{user?.email}</p>
+                  <span className="inline-block mt-0.5 px-2 py-0.5 bg-orange-100/80 text-[#FC5701] text-[10px] font-bold rounded-full capitalize">
+                    {user?.role?.replace('_', ' ')}
+                  </span>
+                </div>
+              </div>
+              <Link
+                to="/profile"
+                onClick={() => setMobileMenuOpen(false)}
+                className="text-xs font-bold text-[#FC5701] hover:underline px-2 py-1"
+              >
+                Profile →
+              </Link>
+            </div>
+          )}
+
           {navLinks.map((link) => (
             <Link
               key={link.path}
@@ -285,10 +371,23 @@ export const Navbar: React.FC = () => {
             </Link>
           ))}
 
+          {isAuthenticated && (
+            <Link
+              to="/profile"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block px-4 py-2.5 rounded-xl text-sm font-medium text-slate-700 hover:bg-slate-50"
+            >
+              My Profile & Settings
+            </Link>
+          )}
+
           <div className="pt-3 border-t border-slate-100 space-y-2">
             <Link
               to="/list-your-space"
-              onClick={() => setMobileMenuOpen(false)}
+              onClick={(e) => {
+                setMobileMenuOpen(false);
+                handleListSpaceClick(e);
+              }}
               className="block"
             >
               <Button variant="outline" className="w-full justify-center">
@@ -299,6 +398,7 @@ export const Navbar: React.FC = () => {
               <Button
                 variant="primary"
                 className="w-full justify-center"
+                icon={<UserIcon className="w-4 h-4" />}
                 onClick={() => {
                   setMobileMenuOpen(false);
                   openAuthModal('login');
@@ -310,12 +410,13 @@ export const Navbar: React.FC = () => {
               <Button
                 variant="danger"
                 className="w-full justify-center"
+                icon={<LogOut className="w-4 h-4" />}
                 onClick={() => {
                   setMobileMenuOpen(false);
                   logout();
                 }}
               >
-                Sign Out
+                Log Out
               </Button>
             )}
           </div>

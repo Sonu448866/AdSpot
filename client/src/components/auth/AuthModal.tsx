@@ -10,6 +10,7 @@ export const AuthModal: React.FC = () => {
     isAuthModalOpen,
     closeAuthModal,
     authModalTab,
+    authModalRole,
     login,
     register,
     loginWithOtp,
@@ -25,7 +26,7 @@ export const AuthModal: React.FC = () => {
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
-  const [role, setRole] = useState<'advertiser' | 'space_owner'>('advertiser');
+  const [role, setRole] = useState<'advertiser' | 'space_owner'>(authModalRole || 'advertiser');
   const [companyName, setCompanyName] = useState('');
 
   // OTP state
@@ -36,8 +37,11 @@ export const AuthModal: React.FC = () => {
 
   React.useEffect(() => {
     setTab(authModalTab);
+    if (authModalRole) {
+      setRole(authModalRole);
+    }
     setError(null);
-  }, [authModalTab, isAuthModalOpen]);
+  }, [authModalTab, authModalRole, isAuthModalOpen]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -139,9 +143,8 @@ export const AuthModal: React.FC = () => {
             setTab('login');
             setError(null);
           }}
-          className={`flex-1 py-2 rounded-lg transition-all ${
-            tab === 'login' ? 'bg-white text-slate-900 shadow-sm font-semibold' : 'text-slate-600 hover:text-slate-900'
-          }`}
+          className={`flex-1 py-2 rounded-lg transition-all ${tab === 'login' ? 'bg-white text-slate-900 shadow-sm font-semibold' : 'text-slate-600 hover:text-slate-900'
+            }`}
         >
           Sign In
         </button>
@@ -150,9 +153,8 @@ export const AuthModal: React.FC = () => {
             setTab('register');
             setError(null);
           }}
-          className={`flex-1 py-2 rounded-lg transition-all ${
-            tab === 'register' ? 'bg-white text-slate-900 shadow-sm font-semibold' : 'text-slate-600 hover:text-slate-900'
-          }`}
+          className={`flex-1 py-2 rounded-lg transition-all ${tab === 'register' ? 'bg-white text-slate-900 shadow-sm font-semibold' : 'text-slate-600 hover:text-slate-900'
+            }`}
         >
           Sign Up
         </button>
@@ -161,13 +163,21 @@ export const AuthModal: React.FC = () => {
             setTab('otp');
             setError(null);
           }}
-          className={`flex-1 py-2 rounded-lg transition-all ${
-            tab === 'otp' ? 'bg-white text-slate-900 shadow-sm font-semibold' : 'text-slate-600 hover:text-slate-900'
-          }`}
+          className={`flex-1 py-2 rounded-lg transition-all ${tab === 'otp' ? 'bg-white text-slate-900 shadow-sm font-semibold' : 'text-slate-600 hover:text-slate-900'
+            }`}
         >
           Mobile OTP
         </button>
       </div>
+
+      {authModalRole === 'space_owner' && (
+        <div className="mb-4 p-3 rounded-xl bg-orange-50 border border-orange-200 text-orange-900 text-xs flex items-center gap-2">
+          <Building2 className="w-4 h-4 text-[#FC5701] shrink-0" />
+          <span>
+            <strong>Space Owner Access:</strong> Sign in or sign up below to list and monetize your ad spaces.
+          </span>
+        </div>
+      )}
 
       {error && (
         <div className="mb-4 p-3 rounded-xl bg-red-50 border border-red-200 text-red-600 text-sm flex items-center gap-2">
@@ -230,22 +240,20 @@ export const AuthModal: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setRole('advertiser')}
-                className={`py-2 px-3 text-xs font-semibold rounded-xl border text-center transition ${
-                  role === 'advertiser'
-                    ? 'border-[#FC5701] bg-orange-50/50 text-[#FC5701]'
-                    : 'border-slate-200 text-slate-600 hover:bg-slate-50'
-                }`}
+                className={`py-2 px-3 text-xs font-semibold rounded-xl border text-center transition ${role === 'advertiser'
+                  ? 'border-[#FC5701] bg-orange-50/50 text-[#FC5701]'
+                  : 'border-slate-200 text-slate-600 hover:bg-slate-50'
+                  }`}
               >
                 Book Ad Spaces
               </button>
               <button
                 type="button"
                 onClick={() => setRole('space_owner')}
-                className={`py-2 px-3 text-xs font-semibold rounded-xl border text-center transition ${
-                  role === 'space_owner'
-                    ? 'border-[#FC5701] bg-orange-50/50 text-[#FC5701]'
-                    : 'border-slate-200 text-slate-600 hover:bg-slate-50'
-                }`}
+                className={`py-2 px-3 text-xs font-semibold rounded-xl border text-center transition ${role === 'space_owner'
+                  ? 'border-[#FC5701] bg-orange-50/50 text-[#FC5701]'
+                  : 'border-slate-200 text-slate-600 hover:bg-slate-50'
+                  }`}
               >
                 List My Spaces
               </button>
@@ -411,10 +419,8 @@ export const AuthModal: React.FC = () => {
 
       {/* 1-Click Fast Test Accounts for Pair Programming & Testing */}
       <div className="mt-6 pt-5 border-t border-slate-100">
-        <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider text-center mb-3">
-          1-Click Instant Demo Access
-        </p>
-        <div className="grid grid-cols-3 gap-2">
+
+        <div className="grid grid-cols-2 gap-2">
           <button
             type="button"
             onClick={() => handleDemoClick('advertiser')}
@@ -428,13 +434,6 @@ export const AuthModal: React.FC = () => {
             className="py-1.5 px-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg text-xs font-medium text-slate-700 transition"
           >
             Space Owner
-          </button>
-          <button
-            type="button"
-            onClick={() => handleDemoClick('admin')}
-            className="py-1.5 px-2 bg-orange-50 hover:bg-orange-100 border border-orange-200 rounded-lg text-xs font-medium text-[#FC5701] transition"
-          >
-            Admin
           </button>
         </div>
       </div>

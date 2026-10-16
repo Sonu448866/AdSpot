@@ -139,6 +139,14 @@ export const getListingById = async (req, res) => {
 
 export const createListing = async (req, res) => {
   try {
+    // Only registered space owners or admins can list advertising spaces
+    if (req.user?.role !== 'space_owner' && req.user?.role !== 'admin') {
+      return res.status(403).json({
+        success: false,
+        message: 'Access denied. You must be logged in as a verified Space Owner to list advertising spaces.',
+      });
+    }
+
     const {
       title,
       description,

@@ -17,7 +17,8 @@ interface AuthContextType {
   updateUser: (updatedUser: Partial<User>) => void;
   isAuthModalOpen: boolean;
   authModalTab: 'login' | 'register' | 'otp';
-  openAuthModal: (tab?: 'login' | 'register' | 'otp') => void;
+  authModalRole: 'advertiser' | 'space_owner';
+  openAuthModal: (tab?: 'login' | 'register' | 'otp', initialRole?: 'advertiser' | 'space_owner') => void;
   closeAuthModal: () => void;
 }
 
@@ -29,9 +30,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState(true);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authModalTab, setAuthModalTab] = useState<'login' | 'register' | 'otp'>('login');
+  const [authModalRole, setAuthModalRole] = useState<'advertiser' | 'space_owner'>('advertiser');
 
-  const openAuthModal = (tab: 'login' | 'register' | 'otp' = 'login') => {
+  const openAuthModal = (
+    tab: 'login' | 'register' | 'otp' = 'login',
+    initialRole: 'advertiser' | 'space_owner' = 'advertiser'
+  ) => {
     setAuthModalTab(tab);
+    setAuthModalRole(initialRole);
     setIsAuthModalOpen(true);
   };
 
@@ -131,6 +137,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         updateUser,
         isAuthModalOpen,
         authModalTab,
+        authModalRole,
         openAuthModal,
         closeAuthModal,
       }}

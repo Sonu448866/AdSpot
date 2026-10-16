@@ -15,14 +15,23 @@ import {
   DollarSign,
   Sparkles,
   ShieldCheck,
+  ShieldAlert,
   X,
   HelpCircle,
+  Lock,
+  RefreshCw,
+  LogOut,
+  Building2,
 } from 'lucide-react';
 
 export const ListYourSpace: React.FC = () => {
   const navigate = useNavigate();
-  const { user, isAuthenticated, openAuthModal } = useAuth();
+  const { user, isAuthenticated, openAuthModal, fastDemoLogin, logout, updateUser } = useAuth();
 
+  const isSpaceOwner = isAuthenticated && (user?.role === 'space_owner' || user?.role === 'admin');
+  const isAdvertiser = isAuthenticated && user?.role === 'advertiser';
+
+  const [upgradingRole, setUpgradingRole] = useState(false);
   const [step, setStep] = useState(1);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -65,6 +74,19 @@ export const ListYourSpace: React.FC = () => {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
 
+  const handleUpgradeToOwner = async () => {
+    try {
+      setUpgradingRole(true);
+      setError(null);
+      const res = await api.patch('/auth/profile', { role: 'space_owner' });
+      updateUser(res.data.user);
+    } catch (err: any) {
+      setError(err.message || 'Failed to update account role');
+    } finally {
+      setUpgradingRole(false);
+    }
+  };
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const filesArray = Array.from(e.target.files);
@@ -84,7 +106,12 @@ export const ListYourSpace: React.FC = () => {
     e.preventDefault();
 
     if (!isAuthenticated) {
-      openAuthModal('login');
+      openAuthModal('login', 'space_owner');
+      return;
+    }
+
+    if (!isSpaceOwner) {
+      setError('You must be logged in as a verified Space Owner to list advertising spaces.');
       return;
     }
 
@@ -163,11 +190,168 @@ export const ListYourSpace: React.FC = () => {
       </div>
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 -mt-6">
-        {!submittedListing ? (
+        {!isAuthenticated ? (
+          /* Authentication Gate: User is not logged in */
+          <div className="bg-white rounded-3xl p-8 sm:p-12 border border-slate-200/80 shadow-xl max-w-2xl mx-auto text-center space-y-6">
+            <div className="w-20 h-20 mx-auto rounded-3xl bg-orange-50 border border-orange-200 flex items-center justify-center text-[#FC5701] shadow-inner">
+              <Building2 className="w-10 h-10" />
+            </div>
+
+            <div className="space-y-2">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-orange-100/70 text-[#FC5701] uppercase tracking-wider">
+                <Lock className="w-3.5 h-3.5" /> Space Owner Account Required
+              </span>
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+                Log In as a Space Owner to Continue
+              </h2>
+              <p className="text-xs sm:text-sm text-slate-500 max-w-md mx-auto leading-relaxed">
+                To list and monetize your billboard, unipole, transit, or offline advertising space on AdSpot, you must be signed in with a registered Space Owner account.
+              </p>
+            </div>
+
+            {/* Value Highlights */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 text-left">
+              <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-100">
+                <p className="text-xs font-bold text-slate-900">100% Free Listing</p>
+                <p className="text-[11px] text-slate-500 mt-0.5">No upfront onboarding or catalog listing fees</p>
+              </div>
+              <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-100">
+                <p className="text-xs font-bold text-slate-900">Verified Demand</p>
+                <p className="text-[11px] text-slate-500 mt-0.5">Direct booking inquiries from verified media buyers</p>
+              </div>
+              <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-100">
+                <p className="text-xs font-bold text-slate-900">Full Payout Control</p>
+                <p className="text-[11px] text-slate-500 mt-0.5">Set daily rates, approvals, & availability</p>
+              </div>
+            </div>
+
+            <div className="pt-2 flex flex-col sm:flex-row gap-3 justify-center">
+              <Button
+                variant="primary"
+                size="md"
+                onClick={() => openAuthModal('login', 'space_owner')}
+                className="w-full sm:w-auto font-semibold px-6 shadow-sm"
+              >
+                Sign In as Space Owner
+              </Button>
+              <Button
+                variant="outline"
+                size="md"
+                onClick={() => openAuthModal('register', 'space_owner')}
+                className="w-full sm:w-auto font-semibold px-6 border-slate-300"
+              >
+                Register New Owner Account
+              </Button>
+            </div>
+
+            {/* Quick Demo Login Shortcut */}
+            <div className="pt-4 border-t border-slate-100">
+              <p className="text-[11px] text-slate-400 mb-2">Testing or evaluating AdSpot?</p>
+              <button
+                type="button"
+                onClick={() => fastDemoLogin('space_owner')}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-orange-50 text-slate-700 hover:text-[#FC5701] text-xs font-medium border border-slate-200 transition"
+              >
+                ⚡ 1-Click Demo Login as Space Owner (owner@adspot.com)
+              </button>
+            </div>
+          </div>
+        ) : isAdvertiser ? (
+          /* Role conflict gate: User is logged in, but as an Advertiser */
+          <div className="bg-white rounded-3xl p-8 sm:p-12 border border-slate-200/80 shadow-xl max-w-2xl mx-auto text-center space-y-6">
+            <div className="w-20 h-20 mx-auto rounded-3xl bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-600 shadow-inner">
+              <ShieldAlert className="w-10 h-10" />
+            </div>
+
+            <div className="space-y-2">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-100/70 text-amber-800 uppercase tracking-wider">
+                Role Conflict: Logged in as Advertiser
+              </span>
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+                Space Owner Account Required
+              </h2>
+              <p className="text-xs sm:text-sm text-slate-500 max-w-md mx-auto leading-relaxed">
+                You are currently signed in as <strong className="text-slate-800">{user?.name}</strong> ({user?.email}) with an <strong>Advertiser</strong> role. Advertisers can browse and book offline media, but only registered <strong>Space Owners</strong> can list inventory.
+              </p>
+            </div>
+
+            {error && (
+              <div className="p-3 bg-red-50 text-red-700 text-xs rounded-2xl border border-red-200 flex items-center gap-2 text-left">
+                <AlertCircle className="w-4 h-4 shrink-0" />
+                <span>{error}</span>
+              </div>
+            )}
+
+            <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200/80 text-left space-y-2">
+              <p className="text-xs font-bold text-slate-800">Choose how you'd like to proceed:</p>
+              <ul className="text-xs text-slate-600 space-y-1 list-disc list-inside">
+                <li>Upgrade your current account to a Space Owner role (instant, keeps your profile)</li>
+                <li>Sign in or register with a dedicated Space Owner account</li>
+              </ul>
+            </div>
+
+            <div className="pt-2 flex flex-col sm:flex-row gap-3 justify-center">
+              <Button
+                variant="primary"
+                size="md"
+                loading={upgradingRole}
+                icon={<RefreshCw className="w-4 h-4" />}
+                onClick={handleUpgradeToOwner}
+                className="w-full sm:w-auto font-semibold px-6 shadow-sm"
+              >
+                Upgrade This Account to Space Owner
+              </Button>
+              <Button
+                variant="outline"
+                size="md"
+                icon={<LogOut className="w-4 h-4" />}
+                onClick={() => {
+                  logout();
+                  openAuthModal('login', 'space_owner');
+                }}
+                className="w-full sm:w-auto font-semibold px-6 border-slate-300"
+              >
+                Sign In with Another Account
+              </Button>
+            </div>
+
+            <div className="pt-3 border-t border-slate-100 flex items-center justify-center gap-4 text-xs">
+              <button
+                type="button"
+                onClick={() => fastDemoLogin('space_owner')}
+                className="text-slate-600 hover:text-[#FC5701] font-medium transition"
+              >
+                ⚡ Fast Demo Switch to Space Owner
+              </button>
+              <span className="text-slate-300">•</span>
+              <button
+                type="button"
+                onClick={() => navigate('/explore')}
+                className="text-slate-500 hover:text-slate-900 transition"
+              >
+                Return to Explore Ads
+              </button>
+            </div>
+          </div>
+        ) : !submittedListing ? (
+          /* Submission form for authenticated space owners / admins */
           <form
             onSubmit={handleSubmit}
             className="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200/80 shadow-xl space-y-8"
           >
+            {/* Authenticated Space Owner Status Banner */}
+            <div className="p-3.5 bg-emerald-50/70 rounded-2xl border border-emerald-200/80 flex items-center justify-between text-xs">
+              <div className="flex items-center gap-2 text-emerald-900 font-medium">
+                <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
+                <span>
+                  Logged in as Space Owner: <strong>{user?.name}</strong> ({user?.email})
+                </span>
+              </div>
+              <span className="px-2 py-0.5 bg-emerald-100 text-emerald-800 text-[10px] font-bold rounded-full capitalize">
+                Verified Provider
+              </span>
+            </div>
+
             {error && (
               <div className="p-4 bg-red-50 text-red-700 text-xs rounded-2xl border border-red-200 flex items-center gap-2">
                 <AlertCircle className="w-5 h-5 shrink-0" />

@@ -86,7 +86,7 @@ export const Home: React.FC = () => {
       {/* ========================================================
           A. HERO SECTION
          ======================================================== */}
-      <section className="relative pt-12 pb-12 lg:pt-12 lg:pb-12 bg-radial-gradient"> 
+      <section className="relative pt-12 pb-12 lg:pt-12 lg:pb-12 bg-radial-gradient">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             {/* Left Content */}
@@ -100,7 +100,7 @@ export const Home: React.FC = () => {
                 <Sparkles className="w-3.5 h-3.5" />
                 The Offline Advertising Marketplace
               </div>
-        
+
               {/* Bold Editorial Headline */}
               <div className="space-y-3 relative">
                 <h1 className="text-4xl sm:text-6xl lg:text-6xl font-black text-slate-950 tracking-tight leading-[0.98] uppercase font-serif">
@@ -129,7 +129,7 @@ export const Home: React.FC = () => {
                   Explore Ads
                 </Button>
                 <Button
-                  variant="outline" 
+                  variant="outline"
                   size="lg"
                   icon={<MapPin className="w-5 h-5 text-[#FC5701]" />}
                   onClick={() => navigate('/maps')}
@@ -155,13 +155,13 @@ export const Home: React.FC = () => {
                 {/* Decorative background glow */}
                 <div className="absolute -inset-4  from-orange-400/20 to-amber-300/20 rounded-3xl blur-2xl -z-10" />
 
-                    {/* Hero Mascot */}
-                  <div className="w-full flex justify-center mb-4">
-                    <img
-                      src="/assets/Adspot_Mascoot.png"
-                      alt="Adspot Mascot"
-                      className="h-80 sm:h-96 mb-24 object-contain filter drop-shadow-lg"
-                    />
+                {/* Hero Mascot */}
+                <div className="w-full flex justify-center mb-4">
+                  <img
+                    src="/assets/Adspot_Mascoot.png"
+                    alt="Adspot Mascot"
+                    className="h-80 sm:h-96 object-contain filter drop-shadow-lg"
+                  />
                 </div>
               </div>
             </div>
@@ -294,11 +294,11 @@ export const Home: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             <div className="lg:col-span-6 flex justify-center">
-                <img
-                  src="/assets/Adspot_Mascoot_exploring.png"
-                  alt="Adspot Exploring"
-                  className="w-80 h-96 mx-auto object-contain filter drop-shadow-lg "
-                />
+              <img
+                src="/assets/Adspot_Mascoot_exploring.png"
+                alt="Adspot Exploring"
+                className="w-80 h-96 mx-auto object-contain filter drop-shadow-lg "
+              />
             </div>
             <div className="lg:col-span-6 space-y-5">
               <span className="text-xs font-bold text-[#FC5701] uppercase tracking-widest block">
@@ -335,7 +335,7 @@ export const Home: React.FC = () => {
               </div>
             </div>
 
-            
+
           </div>
         </div>
       </section>
@@ -736,4 +736,3 @@ export const Home: React.FC = () => {
     </div>
   );
 };
-  
